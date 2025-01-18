@@ -7,36 +7,36 @@ from time import sleep
 def autoclicer() -> None:
     try:
         try:
-            interval =float(input("Привет,введи интервал между кликами:"))
-            clics =int(input("Теперь введи количевство кликов,которое я сделаю:"))
-            button =str(input("теперь введи на какую клавишу ммне нажимать."
+            interval =float(input("write interval"))
+            clics =int(input("write quality of cliks"))
+            button =str(input("write hotkey."
                               "\nleft"
                               "\nmiddle"
                               "\nright"
-                              "\nНужно написать название клавишы:"))
+                              "\nwrite hotkey:"))
             try:
-                interval_for_start =float(input("Последнее.введи интервал перед запуском автокликера:"))
-                print(f"Кликаю {clics} раз с интервалом {interval} на клавишу {button} .")
+                interval_for_start =float(input("write timer:"))
+                print(f"click {clics} with interval {interval} on hotkey {button} .")
                 #main cycle
                 sleep(interval_for_start)
                 for i in range(clics):
                     pg.click(button=button)
                     sleep(interval)
-                    print(f"Осталось {clics} кликов")
+                    print(f"remain {clics} clics")
                     clics -=1
-                print("Клики завершены!")
+                print("clics off!")
                 return
             except ValueError:
-                print("Интервал перед запуском не может быть равен дробному значению")
+                print("interval is invalid")
                 return
 
         except  ValueError:
-            print("Количевство кликов не может быть равно дробному значению")
+            print("invalid clics")
             return
         #if programm was turn off
 
     except KeyboardInterrupt:
-        print("Клики были прерваны")
+        print("clics off")
         return
 
 #launch

@@ -1,45 +1,68 @@
-#import directories
 import pyautogui as pg
 from time import sleep
+from win10toast import ToastNotifier
+import keyboard
 
-#create main function
+from pyautogui import click
+pg.FAILSAFE = False
 
-def autoclicer() -> None:
-    try:
-        try:
-            interval =float(input("write interval"))
-            clics =int(input("write quality of cliks"))
-            button =str(input("write hotkey."
-                              "\nleft"
-                              "\nmiddle"
-                              "\nright"
-                              "\nwrite hotkey:"))
+class MouseAutoClicker:
+    def __init__(self,clicks,interval,button,x,y):
+        self.clicks =clicks
+        self.interval =interval
+        self.button =button
+        self.x =x
+        self.y =y
+        self.new_cliks = self.clicks
+
+        print(f"Кликаю {self.clicks} раз с интервалом {self.interval} секунд на клавишу {self.button} на коордианты {self.x , self.y}")
+        print("ДЛЯ ОСТАНОВКИ СКРИПТА НАЖМИТЕ КЛАВИШУ Q")
+
+
+        self.timer =5
+        for g in range(5):
+            print(f"клики начнуться через : {self.timer} секунд")
+            self.timer -=1
+            sleep(1.5)
+
+
+        for i in range(self.clicks):
             try:
-                interval_for_start =float(input("write timer:"))
-                print(f"click {clics} with interval {interval} on hotkey {button} .")
-                #main cycle
-                sleep(interval_for_start)
-                for i in range(clics):
-                    pg.click(button=button)
-                    sleep(interval)
-                    print(f"remain {clics} clics")
-                    clics -=1
-                print("clics off!")
-                return
-            except ValueError:
-                print("interval is invalid")
-                return
 
-        except  ValueError:
-            print("invalid clics")
-            return
-        #if programm was turn off
+                if keyboard.is_pressed("q"):
+                    print("Клики были прерваны")
+                    ToastNotifier().show_toast("Завершение программы", "Клики были прерваны")
+                    return None
 
-    except KeyboardInterrupt:
-        print("clics off")
-        return
+                pg.click(x=self.x,y=self.y,button=self.button)
+                sleep(self.interval)
+                self.clicks -=1
+                print(f"Осталось {self.clicks} кликов")
 
-#launch
+            except:
+                print("Произошла ошибка. Возможно вы ввели неконкретные данные")
+                ToastNotifier().show_toast("Завершение программы","Клики были прерваны")
+                return None
+
+        print(f" {self.new_cliks} КЛИКОВ ЗАВЕРШЕНЫ")
+        ToastNotifier().show_toast("Успешно!",f"{self.new_cliks} кликов заввершены")
+        return None
+
+
+
 
 if __name__ == "__main__":
-    autoclicer()
+    try:
+        clicks = int(input("Привет Я - простой автокликер для мышки!Для начала введи количество кликов,которое я сделаю >>>>"))
+        interval = int(input("Теперь введи интервал , с которым я буду кликать >>>>"))
+        button = input("Теперь выбери клавишу мышки , на которую мне кликать:"
+                       "\nleft"
+                       "\nmiddle"
+                       "\nright"
+                       "\nНапиши название клавиши >>>>")
+        x = int(input("Предпоследнее . Напиши координату по x , на которую мне кликать >>>>"))
+        y = int(input("Последнее. Напиши координату по y , на которую мне кликать >>>>"))
+        MouseAutoClicker(clicks,interval,button,x,y)
+    except:
+        print("Произошла ошибка. Возможно вы ввели неконкретные данные")
+        ToastNotifier().show_toast("Завершение программы", "Клики были прерваны")
